@@ -6,6 +6,7 @@ import {
   orbitRadius,
   visualRadius,
   angleAt,
+  moonAngleAt,
   hexToRgba,
 } from "../data/planets";
 
@@ -440,15 +441,40 @@ export default function SolarCanvas(props: Props) {
           ctx.restore();
         }
 
-        // earth's moon
-        if (pl.id === "earth" && r > 5) {
-          const ma = TAU * (s.simDays / 27.3) + 1.2;
-          const mx = sp.x + Math.cos(ma) * (r + 7);
-          const my = sp.y + Math.sin(ma) * (r + 7) * 0.85;
-          ctx.fillStyle = "rgba(205,214,232,0.9)";
-          ctx.beginPath();
-          ctx.arc(mx, my, Math.max(1.6, r * 0.18), 0, TAU);
-          ctx.fill();
+        // satellite system
+        if (pl.moonVisuals.length && (selected || hovered || zoom > 0.9)) {
+          const ux = dx / len;
+          const uy = dy / len;
+          const showMoonOrbits =
+            p.showOrbits && (selected || hovered || zoom > 1.6);
+          for (const m of pl.moonVisuals) {
+            const md = r * m.dist + 3;
+            if (showMoonOrbits) {
+              ctx.beginPath();
+              ctx.arc(sp.x, sp.y, md, 0, TAU);
+              ctx.strokeStyle = "rgba(170,195,235,0.14)";
+              ctx.lineWidth = 1;
+              ctx.stroke();
+            }
+            const ma = moonAngleAt(m, s.simDays);
+            const mx = sp.x + Math.cos(ma) * md;
+            const my = sp.y + Math.sin(ma) * md;
+            const ms = Math.max(m.size * (0.55 + 0.45 * zoom), 0.8);
+            const mg = ctx.createRadialGradient(
+              mx + ux * ms * 0.5,
+              my + uy * ms * 0.5,
+              ms * 0.1,
+              mx,
+              my,
+              ms * 1.25
+            );
+            mg.addColorStop(0, m.color);
+            mg.addColorStop(1, "rgba(12,16,26,0.95)");
+            ctx.beginPath();
+            ctx.arc(mx, my, ms, 0, TAU);
+            ctx.fillStyle = mg;
+            ctx.fill();
+          }
         }
 
         // hover halo

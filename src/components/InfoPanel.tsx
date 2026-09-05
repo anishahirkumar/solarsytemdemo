@@ -214,6 +214,34 @@ export default function InfoPanel({
         />
       </div>
 
+      {/* major moons */}
+      <div className="anim-rise px-6 pt-5" style={{ animationDelay: "340ms" }}>
+        <p className="mb-2.5 font-mono text-[9px] tracking-[0.25em] text-faint">
+          {p.moonNames.length > 0 ? "MAJOR MOONS" : "SATELLITES"}
+        </p>
+        {p.moonNames.length > 0 ? (
+          <div className="flex flex-wrap gap-1.5">
+            {p.moonNames.map((n) => (
+              <span
+                key={n}
+                className="rounded-sm border border-line bg-white/[0.03] px-2 py-[3px] font-mono text-[9.5px] tracking-[0.08em] text-dim transition-colors hover:border-faint hover:text-ink"
+              >
+                {n}
+              </span>
+            ))}
+            {p.moons > p.moonNames.length && (
+              <span className="px-1 py-[3px] font-mono text-[9.5px] text-faint">
+                +{p.moons - p.moonNames.length} more
+              </span>
+            )}
+          </div>
+        ) : (
+          <p className="font-mono text-[10.5px] italic tracking-wide text-faint">
+            None — a moonless world.
+          </p>
+        )}
+      </div>
+
       {/* comparison bars */}
       <div className="space-y-4 px-6 pt-6">
         <CompareBar

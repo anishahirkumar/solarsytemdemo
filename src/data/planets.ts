@@ -1,5 +1,17 @@
 export type PlanetType = "Terrestrial" | "Gas giant" | "Ice giant";
 
+export interface MoonSpec {
+  name: string;
+  /** orbital distance, as a multiple of the planet's visual radius */
+  dist: number;
+  /** canvas radius in px at zoom 1 */
+  size: number;
+  /** visual orbital period in sim-days (negative = retrograde) */
+  period: number;
+  color: string;
+  angle0: number;
+}
+
 export interface Planet {
   id: string;
   name: string;
@@ -14,6 +26,10 @@ export interface Planet {
   rotationText: string;
   tempC: number;
   moons: number;
+  /** named satellites shown in the dossier */
+  moonNames: string[];
+  /** rendered satellite system */
+  moonVisuals: MoonSpec[];
   /** render palette */
   colorLight: string;
   color: string;
@@ -43,6 +59,8 @@ export const PLANETS: Planet[] = [
     rotationText: "58.6 days",
     tempC: 167,
     moons: 0,
+    moonNames: [],
+    moonVisuals: [],
     colorLight: "#ddd8d2",
     color: "#9c968f",
     colorDark: "#45413b",
@@ -62,6 +80,8 @@ export const PLANETS: Planet[] = [
     rotationText: "243 days ↺",
     tempC: 464,
     moons: 0,
+    moonNames: [],
+    moonVisuals: [],
     colorLight: "#ffe9c2",
     color: "#e0b26a",
     colorDark: "#7a5728",
@@ -81,6 +101,10 @@ export const PLANETS: Planet[] = [
     rotationText: "23.9 hours",
     tempC: 15,
     moons: 1,
+    moonNames: ["Luna"],
+    moonVisuals: [
+      { name: "Luna", dist: 2.15, size: 1.7, period: 31, color: "#c8cdd6", angle0: 0.8 },
+    ],
     colorLight: "#a5dcff",
     color: "#3f7fd4",
     colorDark: "#122f66",
@@ -100,6 +124,11 @@ export const PLANETS: Planet[] = [
     rotationText: "24.6 hours",
     tempC: -65,
     moons: 2,
+    moonNames: ["Phobos", "Deimos"],
+    moonVisuals: [
+      { name: "Phobos", dist: 1.95, size: 1.0, period: 3.2, color: "#a89a8c", angle0: 2.2 },
+      { name: "Deimos", dist: 2.8, size: 0.85, period: 6.5, color: "#9a8d80", angle0: 4.6 },
+    ],
     colorLight: "#ffb08a",
     color: "#cf5f3a",
     colorDark: "#5f2111",
@@ -119,6 +148,13 @@ export const PLANETS: Planet[] = [
     rotationText: "9.9 hours",
     tempC: -110,
     moons: 95,
+    moonNames: ["Io", "Europa", "Ganymede", "Callisto", "Amalthea", "Himalia", "Thebe", "Metis"],
+    moonVisuals: [
+      { name: "Io", dist: 1.7, size: 1.5, period: 8, color: "#e8d27a", angle0: 1.1 },
+      { name: "Europa", dist: 2.05, size: 1.35, period: 11.4, color: "#d9d4c8", angle0: 3.4 },
+      { name: "Ganymede", dist: 2.4, size: 1.95, period: 16.2, color: "#b7ab98", angle0: 5.2 },
+      { name: "Callisto", dist: 2.85, size: 1.7, period: 24.5, color: "#8f8577", angle0: 0.4 },
+    ],
     colorLight: "#ffdcb0",
     color: "#c9925c",
     colorDark: "#61401f",
@@ -138,6 +174,12 @@ export const PLANETS: Planet[] = [
     rotationText: "10.7 hours",
     tempC: -140,
     moons: 146,
+    moonNames: ["Titan", "Rhea", "Iapetus", "Dione", "Tethys", "Enceladus", "Mimas", "Hyperion"],
+    moonVisuals: [
+      { name: "Enceladus", dist: 2.5, size: 1.1, period: 7.2, color: "#eef3f5", angle0: 2.8 },
+      { name: "Rhea", dist: 2.85, size: 1.4, period: 12.7, color: "#cfc9bd", angle0: 5.5 },
+      { name: "Titan", dist: 3.35, size: 2.1, period: 23.9, color: "#d8a55e", angle0: 1.6 },
+    ],
     colorLight: "#ffe9c4",
     color: "#dcb877",
     colorDark: "#6f5327",
@@ -157,6 +199,13 @@ export const PLANETS: Planet[] = [
     rotationText: "17.2 hours ↺",
     tempC: -195,
     moons: 28,
+    moonNames: ["Titania", "Oberon", "Umbriel", "Ariel", "Miranda"],
+    moonVisuals: [
+      { name: "Miranda", dist: 2.05, size: 1.0, period: 7.1, color: "#c3c9d1", angle0: 0.9 },
+      { name: "Ariel", dist: 2.45, size: 1.2, period: 12.4, color: "#cdd2d9", angle0: 3.1 },
+      { name: "Titania", dist: 2.95, size: 1.55, period: 21.2, color: "#b9bfc9", angle0: 4.9 },
+      { name: "Oberon", dist: 3.4, size: 1.4, period: 25.7, color: "#a9aeb8", angle0: 2.0 },
+    ],
     colorLight: "#d2f7ff",
     color: "#7cc7d8",
     colorDark: "#28606f",
@@ -176,6 +225,11 @@ export const PLANETS: Planet[] = [
     rotationText: "16.1 hours",
     tempC: -200,
     moons: 16,
+    moonNames: ["Triton", "Proteus", "Nereid", "Larissa"],
+    moonVisuals: [
+      { name: "Triton", dist: 2.35, size: 1.55, period: -14.6, color: "#cfe0e8", angle0: 1.4 },
+      { name: "Nereid", dist: 3.15, size: 0.9, period: 52, color: "#9aa5b1", angle0: 4.2 },
+    ],
     colorLight: "#aec6ff",
     color: "#4666d8",
     colorDark: "#16245c",
@@ -200,6 +254,9 @@ export const NEPTUNE_ORBIT = orbitRadius(PLANETS[PLANETS.length - 1].au);
 
 export const angleAt = (p: Planet, simDays: number): number =>
   p.angle0 + (Math.PI * 2 * simDays) / p.orbitalDays;
+
+export const moonAngleAt = (m: MoonSpec, simDays: number): number =>
+  m.angle0 + (Math.PI * 2 * simDays) / m.period;
 
 export const fmt = (n: number): string => n.toLocaleString("en-US");
 
