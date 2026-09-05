@@ -29,6 +29,7 @@ export default function App() {
   const [speedMult, setSpeedMult] = useState(1);
   const [showOrbits, setShowOrbits] = useState(true);
   const [showLabels, setShowLabels] = useState(true);
+  const [showBelt, setShowBelt] = useState(true);
   const [follow, setFollow] = useState(false);
   const [simDays, setSimDays] = useState(0);
   const [resetToken, setResetToken] = useState(0);
@@ -87,6 +88,10 @@ export default function App() {
         case "Escape":
           handleSelect(null);
           break;
+        case "b":
+        case "B":
+          setShowBelt((v) => !v);
+          break;
         case "+":
         case "=": {
           const i = SPEED_PRESETS.indexOf(speedMult);
@@ -120,6 +125,7 @@ export default function App() {
         speedDaysPerSec={speedMult * BASE_DAYS_PER_SEC}
         showOrbits={showOrbits}
         showLabels={showLabels}
+        showBelt={showBelt}
         follow={follow}
         selectedId={selectedId}
         reducedMotion={reducedMotion}
@@ -142,7 +148,8 @@ export default function App() {
             HELIOS<span className="text-solar">·</span>ORRERY
           </h1>
           <p className="mt-2 max-w-[300px] text-[12.5px] leading-snug text-dim">
-            The Sun and its eight worlds, in live orbital motion.{" "}
+            The Sun, its eight worlds and the asteroid belt — in live
+            orbital motion.{" "}
             <span className="text-ink/80">Click any planet</span> to open its
             dossier.
           </p>
@@ -187,9 +194,11 @@ export default function App() {
         simDays={simDays}
         showOrbits={showOrbits}
         showLabels={showLabels}
+        showBelt={showBelt}
         follow={follow}
         onToggleOrbits={() => setShowOrbits((v) => !v)}
         onToggleLabels={() => setShowLabels((v) => !v)}
+        onToggleBelt={() => setShowBelt((v) => !v)}
         onToggleFollow={toggleFollow}
         onReset={() => {
           setResetToken((t) => t + 1);
@@ -203,6 +212,8 @@ export default function App() {
         ORBIT RADII √-SCALED TO FIT · BODY SIZES EXAGGERATED
         <br />
         ORBITAL PERIODS IN TRUE RATIO
+        <br />
+        BELT · 2.1–3.3 AU · KEPLERIAN MOTION
       </div>
 
       {/* keyboard hint */}
@@ -211,7 +222,7 @@ export default function App() {
         <span>
           ←/→ CYCLE WORLDS · SPACE PLAY/PAUSE
           <br />
-          +/− VELOCITY · ESC RELEASE
+          +/− VELOCITY · B BELT · ESC RELEASE
         </span>
       </div>
 

@@ -267,3 +267,67 @@ export const hexToRgba = (hex: string, alpha: number): string => {
   const b = parseInt(h.slice(4, 6), 16);
   return `rgba(${r},${g},${b},${alpha})`;
 };
+
+/* ------------------------------------------------------------------ */
+/*  Asteroid belt — 2.06–3.32 AU, periods follow Kepler (a^1.5)        */
+/* ------------------------------------------------------------------ */
+
+const TAU = Math.PI * 2;
+
+export const BELT_INNER = orbitRadius(2.06);
+export const BELT_OUTER = orbitRadius(3.32);
+
+export interface Asteroid {
+  r: number;
+  periodDays: number;
+  angle0: number;
+  size: number;
+  alpha: number;
+  color: string;
+  name?: string;
+}
+
+const ROCK_COLORS = [
+  "#9a938a",
+  "#8b867e",
+  "#a8a29a",
+  "#7d7a76",
+  "#b0a89c",
+  "#8f96a3",
+  "#a29a8e",
+];
+
+const keplerDays = (a: number) => 365.25 * Math.pow(a, 1.5);
+
+const NOTABLE: Array<{ name: string; a: number; size: number; color: string }> = [
+  { name: "CERES", a: 2.77, size: 3.4, color: "#ddd4c6" },
+  { name: "VESTA", a: 2.36, size: 2.3, color: "#d3c9b9" },
+  { name: "PALLAS", a: 2.77, size: 2.1, color: "#c0c8d6" },
+];
+
+export function generateBelt(count: number): Asteroid[] {
+  const rocks: Asteroid[] = [];
+  for (let i = 0; i < count; i++) {
+    const a = 2.06 + Math.random() * 1.26;
+    rocks.push({
+      r: orbitRadius(a) + (Math.random() - 0.5) * 9,
+      periodDays: keplerDays(a),
+      angle0: Math.random() * TAU,
+      size: 0.5 + Math.pow(Math.random(), 3) * 1.6,
+      alpha: 0.2 + Math.random() * 0.55,
+      color: ROCK_COLORS[Math.floor(Math.random() * ROCK_COLORS.length)],
+    });
+  }
+  for (const n of NOTABLE) {
+    rocks.push({
+      r: orbitRadius(n.a) + (Math.random() - 0.5) * 4,
+      periodDays: keplerDays(n.a),
+      angle0: Math.random() * TAU,
+      size: n.size,
+      alpha: 0.95,
+      color: n.color,
+      name: n.name,
+    });
+  }
+  return rocks;
+}

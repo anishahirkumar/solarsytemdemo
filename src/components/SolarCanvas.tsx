@@ -8,6 +8,10 @@ import {
   angleAt,
   moonAngleAt,
   hexToRgba,
+  generateBelt,
+  BELT_INNER,
+  BELT_OUTER,
+  type Asteroid,
 } from "../data/planets";
 
 interface Props {
@@ -15,6 +19,7 @@ interface Props {
   speedDaysPerSec: number;
   showOrbits: boolean;
   showLabels: boolean;
+  showBelt: boolean;
   follow: boolean;
   selectedId: string | null;
   reducedMotion: boolean;
@@ -66,6 +71,7 @@ export default function SolarCanvas(props: Props) {
     hits: [] as Hit[],
     hoverId: null as string | null,
     drag: { on: false, x: 0, y: 0, moved: 0, announced: false },
+    asteroids: [] as Asteroid[],
   });
 
   useEffect(() => {
@@ -85,6 +91,7 @@ export default function SolarCanvas(props: Props) {
     const wrap = wrapRef.current!;
     const ctx = canvas.getContext("2d")!;
     const s = stateRef.current;
+    if (s.asteroids.length === 0) s.asteroids = generateBelt(320);
 
     let w = 0;
     let h = 0;
@@ -318,6 +325,47 @@ export default function SolarCanvas(props: Props) {
           ctx.lineWidth = active ? 1.4 : 1;
           ctx.stroke();
         }
+      }
+
+      // asteroid belt (Mars → Jupiter)
+      if (p.showBelt) {
+        if (p.showOrbits) {
+          ctx.strokeStyle = "rgba(168,160,148,0.10)";
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.arc(sun.x, sun.y, BELT_INNER * zoom, 0, TAU);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.arc(sun.x, sun.y, BELT_OUTER * zoom, 0, TAU);
+          ctx.stroke();
+        }
+        for (const rock of s.asteroids) {
+          const ra = rock.angle0 + (TAU * s.simDays) / rock.periodDays;
+          const rx = sun.x + Math.cos(ra) * rock.r * zoom;
+          const ry = sun.y + Math.sin(ra) * rock.r * zoom;
+          if (rx < -20 || rx > w + 20 || ry < -20 || ry > h + 20) continue;
+          if (rock.name) {
+            const nrs = Math.max(rock.size * zoom * 0.55, 2);
+            ctx.globalAlpha = rock.alpha;
+            ctx.fillStyle = rock.color;
+            ctx.beginPath();
+            ctx.arc(rx, ry, nrs, 0, TAU);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+            if (p.showLabels && zoom > 1.25) {
+              ctx.font = '500 9px "IBM Plex Mono", monospace';
+              ctx.textAlign = "center";
+              ctx.fillStyle = "rgba(222,215,201,0.62)";
+              ctx.fillText(rock.name, rx, ry - nrs - 5);
+            }
+          } else {
+            ctx.globalAlpha = rock.alpha * (zoom > 1.1 ? 1 : 0.85);
+            ctx.fillStyle = rock.color;
+            const rs = rock.size * (0.6 + 0.4 * zoom);
+            ctx.fillRect(rx - rs / 2, ry - rs / 2, rs, rs);
+          }
+        }
+        ctx.globalAlpha = 1;
       }
 
       // per-planet geometry

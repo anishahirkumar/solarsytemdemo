@@ -6,6 +6,7 @@ import {
   IconOrbits,
   IconTag,
   IconFollow,
+  IconBelt,
 } from "./icons";
 
 interface Props {
@@ -16,9 +17,11 @@ interface Props {
   simDays: number;
   showOrbits: boolean;
   showLabels: boolean;
+  showBelt: boolean;
   follow: boolean;
   onToggleOrbits: () => void;
   onToggleLabels: () => void;
+  onToggleBelt: () => void;
   onToggleFollow: () => void;
   onReset: () => void;
   reducedMotion: boolean;
@@ -59,9 +62,11 @@ export default function ControlDock({
   simDays,
   showOrbits,
   showLabels,
+  showBelt,
   follow,
   onToggleOrbits,
   onToggleLabels,
+  onToggleBelt,
   onToggleFollow,
   onReset,
   reducedMotion,
@@ -151,6 +156,9 @@ export default function ControlDock({
           </Toggle>
           <Toggle active={showLabels} onClick={onToggleLabels} label="LABELS">
             <IconTag size={13} />
+          </Toggle>
+          <Toggle active={showBelt} onClick={onToggleBelt} label="BELT">
+            <IconBelt size={13} />
           </Toggle>
           <Toggle active={follow} onClick={onToggleFollow} label="FOLLOW">
             <IconFollow size={13} />

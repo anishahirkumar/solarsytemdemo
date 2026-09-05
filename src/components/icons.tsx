@@ -79,3 +79,15 @@ export const IconArrowKeys = ({ size, ...p }: P) => (
     <path d="M5 12.5 4.2 11h1.6L5 12.5ZM12 11.5l.8 1.5h-1.6L12 11.5ZM18.5 12.5l-.8-1.5h1.6l-.8 1.5Z" fill="currentColor" stroke="none" />
   </svg>
 );
+
+export const IconBelt = ({ size, ...p }: P) => (
+  <svg {...base(size)} {...p}>
+    <circle cx="12" cy="12" r="2.1" fill="currentColor" stroke="none" />
+    <path d="M12 4.6a7.4 7.4 0 0 1 7.4 7.4" />
+    <path d="M12 19.4a7.4 7.4 0 0 1-7.4-7.4" />
+    <circle cx="18.1" cy="6.6" r="1" fill="currentColor" stroke="none" />
+    <circle cx="5.6" cy="17.1" r="1" fill="currentColor" stroke="none" />
+    <circle cx="19.7" cy="14.8" r="0.7" fill="currentColor" stroke="none" />
+    <circle cx="4.6" cy="9.3" r="0.7" fill="currentColor" stroke="none" />
+  </svg>
+);
